@@ -1,0 +1,80 @@
+openapi: 3.0.3
+info:
+  version: 1.0.0
+  title: SalaryStatsApi
+  description: Salaried People 
+
+paths:
+  /api/v1/persons:
+    x-router-controller: personsController
+    get:
+      description: Returns all persons
+      operationId: getPersons
+      responses:
+        200:
+          description: Person list
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/person'
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+  /api/v1/persons/{province}:
+    x-router-controller: personsController
+    get:
+      description: Returns a single person by its province
+      operationId: findByprovince
+      parameters:
+        - required: true
+          name: province
+          description: province of the person to fetch
+          in: path
+          schema:
+            type: string
+      responses:
+        200:
+          description: Person found by province
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/person'
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+
+components:
+  schemas:
+    person:
+        type: object
+        required:
+          - province
+        properties:
+          province:
+            type: string
+          gender:
+            type: string
+          year:
+            type: number
+          salaried:
+            type: number
+          average_salary:
+            type: number
+          standard_deviation:
+            type: number
+    error:
+      type: object
+      required:
+        - message
+      properties:
+        message:
+          type: string
+      additionalProperties: true
